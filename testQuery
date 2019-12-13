@@ -1,0 +1,29 @@
+SELECT a_annonce_revision.idannonce, a_annonce_revision.cp, a_annonce_revision.adresse
+FROM
+(
+    SELECT annonce_revision.idannonce, annonce_revision.cp, annonce_revision.adresse, year, month, day,
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
+    FROM 
+    immobc.annonce_revision
+) a_annonce_revision
+INNER JOIN (
+    SELECT 
+    idannonce,
+    MAX(CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)) datemaj
+    FROM 
+    immobc.annonce_revision
+    WHERE 
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    <timestamp '2019-11-01'
+    AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    >timestamp '2019-10-15'
+    GROUP BY idannonce
+) b_annonce_revision
+ON a_annonce_revision.idannonce = b_annonce_revision.idannonce AND a_annonce_revision.datemaj = b_annonce_revision.datemaj 
+WHERE 
+CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+<timestamp '2019-11-01'
+AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+>timestamp '2019-10-15'
+
+

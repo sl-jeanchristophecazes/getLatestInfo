@@ -9,7 +9,8 @@ def makeCustomQueryLines(tableName,dateStart,dateEnd,ListCol):
         tableName {str} -- Nom de la table sur laquelle on fait la requête
         dateStart {str} -- Date de départ au format YYYY/MM/DD
         dateEnd {str} -- Date limite au format YYYY/MM/DD
-        ListCol {list[str]} -- Liste contenant les noms des colonnes sélectionnées
+        ListCol {list[str]} -- Liste contenant les noms des colonnes sélectionnées. Le premier élément de la liste 
+        est la colonne sur laquelle la jointure est faite.
     """    
     
     A_table = "a_{}".format(tableName)
@@ -41,7 +42,8 @@ def makeCustomQuery(tableName,dateStart,dateEnd,ListCol):
         tableName {str} -- Nom de la table sur laquelle on fait la requête
         dateStart {str} -- Date de départ au format YYYY/MM/DD
         dateEnd {str} -- Date limite au format YYYY/MM/DD
-        ListCol {list[str]} -- Liste contenant les noms des colonnes sélectionnées
+        ListCol {list[str]} -- Liste contenant les noms des colonnes sélectionnées. Le premier élément de la liste 
+        est la colonne sur laquelle la jointure est faite.
     """    
     customLines = makeCustomQueryLines(tableName,dateStart,dateEnd,ListCol)
     selectTableAColLine = customLines[0]
@@ -61,5 +63,10 @@ def makeCustomQuery(tableName,dateStart,dateEnd,ListCol):
 
 if __name__ == "__main__":
     print("Voici un exemple \n")
-    print("makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','surface','si_meuble']) renvoie: ")
-    print(makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','surface','si_meuble']))
+    print("makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse']) renvoie: ")
+
+    query = makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse'])
+    print(query)
+
+    with open('testQuery','w') as file:
+        file.write(query)
