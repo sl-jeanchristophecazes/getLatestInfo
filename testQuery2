@@ -1,0 +1,29 @@
+SELECT a_annonce_revision.idannonce, a_annonce_revision.idagence, a_annonce_revision.contact, a_annonce_revision.telephone, a_annonce_revision.email, a_annonce_revision.refannonce, a_annonce_revision.refexterne, a_annonce_revision.libelle_fr, a_annonce_revision.si_supprimer, a_annonce_revision.dt_crea, a_annonce_revision.dt_maj, a_annonce_revision.source, a_annonce_revision.bq_aar_idannonce, a_annonce_revision.bq_aac_idannonce, a_annonce_revision.bq_si_censure, a_annonce_revision.numero_mandat
+FROM
+(
+    SELECT annonce_revision.idannonce, annonce_revision.idagence, annonce_revision.contact, annonce_revision.telephone, annonce_revision.email, annonce_revision.refannonce, annonce_revision.refexterne, annonce_revision.libelle_fr, annonce_revision.si_supprimer, annonce_revision.dt_crea, annonce_revision.dt_maj, annonce_revision.source, annonce_revision.bq_aar_idannonce, annonce_revision.bq_aac_idannonce, annonce_revision.bq_si_censure, annonce_revision.numero_mandat, year, month, day,
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
+    FROM 
+    immobc.annonce_revision
+) a_annonce_revision
+INNER JOIN (
+    SELECT 
+    idannonce,
+    MAX(CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)) datemaj
+    FROM 
+    immobc.annonce_revision
+    WHERE 
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    <timestamp '2019-11-01'
+    AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    >timestamp '2019-05-01'
+    GROUP BY idannonce
+) b_annonce_revision
+ON a_annonce_revision.idannonce = b_annonce_revision.idannonce AND a_annonce_revision.datemaj = b_annonce_revision.datemaj 
+WHERE 
+CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+<timestamp '2019-11-01'
+AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+>timestamp '2019-05-01'
+
+
