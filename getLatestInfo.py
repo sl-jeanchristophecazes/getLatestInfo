@@ -39,6 +39,7 @@ def makeCustomQuery(DBName,tableName,dateStart,dateEnd,ListCol):
     """A partir des arguments, renvoie un str correspondant à la requête à effectuer
     
     Arguments:
+        DBName {str} -- Nom de la base de données sur laquelle on fait la requête
         tableName {str} -- Nom de la table sur laquelle on fait la requête
         dateStart {str} -- Date de départ au format YYYY/MM/DD
         dateEnd {str} -- Date limite au format YYYY/MM/DD
