@@ -35,7 +35,7 @@ def makeCustomQueryLines(tableName,dateStart,dateEnd,ListCol):
 
 
 
-def makeCustomQuery(tableName,dateStart,dateEnd,ListCol):
+def makeCustomQuery(DBName,tableName,dateStart,dateEnd,ListCol):
     """A partir des arguments, renvoie un str correspondant à la requête à effectuer
     
     Arguments:
@@ -57,7 +57,7 @@ def makeCustomQuery(tableName,dateStart,dateEnd,ListCol):
         query = file.read()
 
     query = query.format(selectTableAColLine,selectOriginalTable,joinOnLine,\
-                            innerJoinCol,tableName,dateStart,dateEnd,A_table,B_table)
+                            innerJoinCol,tableName,dateStart,dateEnd,A_table,B_table,DBName)
 
     return(query)
 

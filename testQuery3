@@ -1,0 +1,29 @@
+SELECT a_annonce_revision.idannonce, a_annonce_revision.sibd, a_annonce_revision.sisl, a_annonce_revision.sipp, a_annonce_revision.sisln, a_annonce_revision.siwebimm, a_annonce_revision.sicmi, a_annonce_revision.sibucom, a_annonce_revision.sicoex, a_annonce_revision.siis, a_annonce_revision.siagb, a_annonce_revision._action_, a_annonce_revision._revisiondate_
+FROM
+(
+    SELECT annonce_revision.idannonce, annonce_revision.sibd, annonce_revision.sisl, annonce_revision.sipp, annonce_revision.sisln, annonce_revision.siwebimm, annonce_revision.sicmi, annonce_revision.sibucom, annonce_revision.sicoex, annonce_revision.siis, annonce_revision.siagb, annonce_revision._action_, annonce_revision._revisiondate_, year, month, day,
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
+    FROM 
+    predata.annonce_revision
+) a_annonce_revision
+INNER JOIN (
+    SELECT 
+    idannonce,
+    MAX(CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)) datemaj
+    FROM 
+    predata.annonce_revision
+    WHERE 
+    CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    <timestamp '2019-11-01'
+    AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+    >timestamp '2019-05-01'
+    GROUP BY idannonce
+) b_annonce_revision
+ON a_annonce_revision.idannonce = b_annonce_revision.idannonce AND a_annonce_revision.datemaj = b_annonce_revision.datemaj 
+WHERE 
+CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+<timestamp '2019-11-01'
+AND CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP)
+>timestamp '2019-05-01'
+
+
