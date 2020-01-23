@@ -64,9 +64,9 @@ def makeCustomQuery(DBName,tableName,dateStart,dateEnd,ListCol):
 
 if __name__ == "__main__":
     print("Voici un exemple \n")
-    print("makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse']) renvoie: ")
+    print("makeCustomQuery('immobc','annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse']) renvoie: ")
 
-    query = makeCustomQuery('annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse'])
+    query = makeCustomQuery('immobc','annonce_revision','2019-10-15','2019-11-01',['idannonce','cp','adresse'])
     print(query)
 
     with open('testQuery','w') as file:
